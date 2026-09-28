@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wordle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>🟩 WORDLE</h1>
+    <div id="streak-display">🔥 Streak: <span id="streak">0</span></div>
+  </header>
+
+  <!-- Word Source Selector -->
+  <div id="source-bar">
+    <label>Word Source:</label>
+    <button id="btn-stanford" class="source-btn active" data-source="stanford">
+      Stanford <span class="word-count">(5,757)</span>
+    </button>
+    <button id="btn-sowpods" class="source-btn" data-source="sowpods">
+      SOWPODS ⭐⭐ <span class="word-count">(12,478)</span>
+    </button>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast"></div>
+
+  <!-- Game Board: 6 rows × 5 tiles -->
+  <div id="board">
+    <div class="row" id="row-0">
+      <div class="tile" id="r0c0"></div>
+      <div class="tile" id="r0c1"></div>
+      <div class="tile" id="r0c2"></div>
+      <div class="tile" id="r0c3"></div>
+      <div class="tile" id="r0c4"></div>
+    </div>
+    <div class="row" id="row-1">
+      <div class="tile" id="r1c0"></div>
+      <div class="tile" id="r1c1"></div>
+      <div class="tile" id="r1c2"></div>
+      <div class="tile" id="r1c3"></div>
+      <div class="tile" id="r1c4"></div>
+    </div>
+    <div class="row" id="row-2">
+      <div class="tile" id="r2c0"></div>
+      <div class="tile" id="r2c1"></div>
+      <div class="tile" id="r2c2"></div>
+      <div class="tile" id="r2c3"></div>
+      <div class="tile" id="r2c4"></div>
+    </div>
+    <div class="row" id="row-3">
+      <div class="tile" id="r3c0"></div>
+      <div class="tile" id="r3c1"></div>
+      <div class="tile" id="r3c2"></div>
+      <div class="tile" id="r3c3"></div>
+      <div class="tile" id="r3c4"></div>
+    </div>
+    <div class="row" id="row-4">
+      <div class="tile" id="r4c0"></div>
+      <div class="tile" id="r4c1"></div>
+      <div class="tile" id="r4c2"></div>
+      <div class="tile" id="r4c3"></div>
+      <div class="tile" id="r4c4"></div>
+    </div>
+    <div class="row" id="row-5">
+      <div class="tile" id="r5c0"></div>
+      <div class="tile" id="r5c1"></div>
+      <div class="tile" id="r5c2"></div>
+      <div class="tile" id="r5c3"></div>
+      <div class="tile" id="r5c4"></div>
+    </div>
+  </div>
+
+  <!-- On-screen Keyboard -->
+  <div id="keyboard">
+    <div class="kb-row">
+      <button class="key" data-key="Q">Q</button>
+      <button class="key" data-key="W">W</button>
+      <button class="key" data-key="E">E</button>
+      <button class="key" data-key="R">R</button>
+      <button class="key" data-key="T">T</button>
+      <button class="key" data-key="Y">Y</button>
+      <button class="key" data-key="U">U</button>
+      <button class="key" data-key="I">I</button>
+      <button class="key" data-key="O">O</button>
+      <button class="key" data-key="P">P</button>
+    </div>
+    <div class="kb-row">
+      <button class="key" data-key="A">A</button>
+      <button class="key" data-key="S">S</button>
+      <button class="key" data-key="D">D</button>
+      <button class="key" data-key="F">F</button>
+      <button class="key" data-key="G">G</button>
+      <button class="key" data-key="H">H</button>
+      <button class="key" data-key="J">J</button>
+      <button class="key" data-key="K">K</button>
+      <button class="key" data-key="L">L</button>
+    </div>
+    <div class="kb-row">
+      <button class="key wide" data-key="ENTER">ENTER</button>
+      <button class="key" data-key="Z">Z</button>
+      <button class="key" data-key="X">X</button>
+      <button class="key" data-key="C">C</button>
+      <button class="key" data-key="V">V</button>
+      <button class="key" data-key="B">B</button>
+      <button class="key" data-key="N">N</button>
+      <button class="key" data-key="M">M</button>
+      <button class="key wide" data-key="BACKSPACE">⌫</button>
+    </div>
+  </div>
+
+  <!-- New Game Button -->
+  <div id="controls">
+    <button id="new-game-btn">New Game</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

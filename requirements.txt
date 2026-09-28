@@ -1,0 +1,4 @@
+# Wordle web app - server.py uses only Python stdlib (no extra packages needed)
+# The terminal version (wordle.py) needs these:
+rich==13.7.1
+requests==2.31.0

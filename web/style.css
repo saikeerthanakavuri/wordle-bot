@@ -1,0 +1,302 @@
+/* ── Reset & Base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:           #121213;
+  --header-bg:    #1a1a1b;
+  --border:       #3a3a3c;
+  --tile-empty:   #121213;
+  --tile-filled:  #121213;
+  --tile-border-empty:  #3a3a3c;
+  --tile-border-filled: #565758;
+  --correct:      #538d4e;
+  --misplaced:    #b59f3b;
+  --wrong:        #3a3a3c;
+  --key-bg:       #818384;
+  --key-text:     #ffffff;
+  --text:         #ffffff;
+  --text-dim:     #818384;
+  --toast-bg:     #ffffff;
+  --toast-text:   #121213;
+  --streak-color: #f5a623;
+  --source-active:#538d4e;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  user-select: none;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+header {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+#streak-display {
+  font-size: 0.95rem;
+  color: var(--streak-color);
+  font-weight: 700;
+}
+
+/* ── Word Source Bar ─────────────────────────────────────────────── */
+#source-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#source-bar label {
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.source-btn {
+  background: var(--wrong);
+  color: var(--key-text);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.source-btn:hover { filter: brightness(1.3); }
+.source-btn:active { transform: scale(0.96); }
+
+.source-btn.active {
+  background: var(--source-active);
+  color: #fff;
+}
+
+.word-count { opacity: 0.75; font-weight: 400; }
+
+/* ── Toast ───────────────────────────────────────────────────────── */
+#toast {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: var(--toast-bg);
+  color: var(--toast-text);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Board ───────────────────────────────────────────────────────── */
+#board {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+.tile {
+  width: 62px;
+  height: 62px;
+  border: 2px solid var(--tile-border-empty);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--tile-empty);
+  transition: border-color 0.05s;
+  /* flip animation */
+  perspective: 250px;
+}
+
+/* Pop animation when typing */
+@keyframes pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.tile.pop { animation: pop 0.1s ease-in-out; }
+
+/* Tile has a letter but not yet submitted */
+.tile.filled {
+  border-color: var(--tile-border-filled);
+}
+
+/* Flip reveal animation */
+@keyframes flip-in {
+  0%   { transform: rotateX(0deg); }
+  50%  { transform: rotateX(-90deg); }
+}
+@keyframes flip-out {
+  50%  { transform: rotateX(-90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+.tile.flip {
+  animation: flip-in 0.25s ease-in forwards, flip-out 0.25s ease-out 0.25s forwards;
+}
+
+/* Shake for invalid guess */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-6px); }
+  80%       { transform: translateX(6px); }
+}
+
+.row.shake { animation: shake 0.4s ease; }
+
+/* Bounce for win */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  40%       { transform: translateY(-20px); }
+  60%       { transform: translateY(-10px); }
+}
+
+.tile.bounce { animation: bounce 0.6s ease; }
+
+/* Tile color states (applied after flip) */
+.tile.correct   { background: var(--correct);   border-color: var(--correct);   color: #fff; }
+.tile.misplaced { background: var(--misplaced); border-color: var(--misplaced); color: #fff; }
+.tile.wrong     { background: var(--wrong);     border-color: var(--wrong);     color: #fff; }
+
+/* ── On-screen Keyboard ──────────────────────────────────────────── */
+#keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.kb-row {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.key {
+  height: 58px;
+  min-width: 43px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 4px;
+  background: var(--key-bg);
+  color: var(--key-text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.key.wide { min-width: 65px; font-size: 0.75rem; }
+
+.key:hover  { filter: brightness(1.3); }
+.key:active { transform: scale(0.95); }
+
+/* Key colour states */
+.key.correct   { background: var(--correct);   color: #fff; }
+.key.misplaced { background: var(--misplaced); color: #fff; }
+.key.wrong     { background: #3a3a3c;          color: #fff; }
+
+/* ── New Game Button ─────────────────────────────────────────────── */
+#controls { margin-bottom: 30px; }
+
+#new-game-btn {
+  background: var(--correct);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: filter 0.2s, transform 0.1s;
+}
+
+#new-game-btn:hover  { filter: brightness(1.2); }
+#new-game-btn:active { transform: scale(0.97); }
+
+/* ── Loading overlay ─────────────────────────────────────────────── */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18,18,19,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  gap: 16px;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+#loading-overlay .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border);
+  border-top-color: var(--correct);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .tile  { width: 52px; height: 52px; font-size: 1.6rem; }
+  .key   { height: 50px; min-width: 34px; font-size: 0.75rem; }
+  .key.wide { min-width: 54px; }
+  header h1 { font-size: 1.3rem; }
+}
